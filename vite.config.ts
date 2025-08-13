@@ -48,8 +48,6 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@/popup': resolve(__dirname, 'src/popup'),
-      '@/background': resolve(__dirname, 'src/background'),
-      '@/content': resolve(__dirname, 'src/content'),
       '@/shared': resolve(__dirname, 'src/shared'),
     },
   },
@@ -59,29 +57,19 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: resolve(__dirname, 'src/popup/index.html'),
-        background: resolve(__dirname, 'src/background/background.ts'),
-        content: resolve(__dirname, 'src/content/content.ts'),
       },
       output: {
-        entryFileNames: (chunkInfo) => {
-          // 确保文件名正确
-          if (chunkInfo.name === 'popup') return 'popup.js';
-          if (chunkInfo.name === 'background') return 'background.js';
-          if (chunkInfo.name === 'content') return 'content.js';
-          return '[name].js';
-        },
+        entryFileNames: '[name].js',
         chunkFileNames: 'chunks/[name].js',
         assetFileNames: (assetInfo) => {
-          // popup.html 放在根目录
           if (assetInfo.name === 'index.html') return 'popup.html';
           if (assetInfo.name?.endsWith('.css')) return 'css/[name].[ext]';
           return 'assets/[name].[ext]';
         },
       },
     },
-    // Chrome扩展需要这些设置
     target: 'es2020',
-    minify: false, // 保持可读性便于调试
+    minify: false,
     sourcemap: true,
   },
   define: {

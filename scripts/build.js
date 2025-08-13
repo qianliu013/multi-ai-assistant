@@ -25,12 +25,24 @@ try {
   // 2. 运行 ESLint (暂时跳过)
   console.log('🔍 跳过 ESLint 检查 (配置中)...');
 
-  // 3. 运行 Vite 构建
-  console.log('🔨 构建项目...');
+  // 3. 构建popup界面
+  console.log('🔨 构建popup界面...');
   execSync('vite build', { stdio: 'inherit', cwd: projectRoot });
-  console.log('✅ 项目构建完成\n');
+  console.log('✅ popup构建完成\n');
 
-  // 4. 验证构建结果
+  // 4. 构建background脚本
+  console.log('🔨 构建background脚本...');
+  process.env.BUILD_TARGET = 'background';
+  execSync('vite build --config vite.config.background.ts', { stdio: 'inherit', cwd: projectRoot });
+  console.log('✅ background构建完成\n');
+
+  // 5. 构建content脚本
+  console.log('🔨 构建content脚本...');
+  process.env.BUILD_TARGET = 'content';
+  execSync('vite build --config vite.config.background.ts', { stdio: 'inherit', cwd: projectRoot });
+  console.log('✅ content构建完成\n');
+
+  // 6. 验证构建结果
   console.log('🔍 验证构建结果...');
   const distDir = resolve(projectRoot, 'dist');
   const requiredFiles = [
