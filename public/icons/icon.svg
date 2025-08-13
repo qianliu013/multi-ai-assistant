@@ -1,13 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="bubble1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#f1f5f9;stop-opacity:0.85" />
+    </linearGradient>
+    
+    <linearGradient id="bubble2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <linearGradient id="bubble3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.85" />
+      <stop offset="100%" style="stop-color:#cbd5e1;stop-opacity:0.75" />
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="20" fill="url(#grad)"/>
-  <circle cx="40" cy="50" r="12" fill="white" opacity="0.9"/>
-  <circle cx="64" cy="50" r="12" fill="white" opacity="0.9"/>
-  <circle cx="88" cy="50" r="12" fill="white" opacity="0.9"/>
-  <text x="64" y="90" text-anchor="middle" fill="white" font-size="14" font-family="Arial, sans-serif" font-weight="bold">AI</text>
+  
+  <!-- Background with rounded corners -->
+  <rect width="128" height="128" rx="24" fill="url(#bgGrad)"/>
+  
+  <!-- Chat bubble 1 (Top left) -->
+  <path d="M 25 35 Q 25 25 35 25 L 55 25 Q 65 25 65 35 L 65 45 Q 65 55 55 55 L 40 55 L 30 65 L 35 55 Q 25 55 25 45 Z" 
+        fill="url(#bubble1)" stroke="#ffffff" stroke-width="1" opacity="0.9"/>
+  
+  <!-- Chat bubble 2 (Top right) -->
+  <path d="M 75 45 Q 75 35 85 35 L 105 35 Q 115 35 115 45 L 115 55 Q 115 65 105 65 L 90 65 L 80 75 L 85 65 Q 75 65 75 55 Z" 
+        fill="url(#bubble2)" stroke="#ffffff" stroke-width="1" opacity="0.85"/>
+  
+  <!-- Chat bubble 3 (Bottom center) -->
+  <path d="M 40 75 Q 40 65 50 65 L 80 65 Q 90 65 90 75 L 90 85 Q 90 95 80 95 L 60 95 L 50 105 L 55 95 Q 40 95 40 85 Z" 
+        fill="url(#bubble3)" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+  
+  <!-- AI dots inside bubbles -->
+  <circle cx="50" cy="40" r="3" fill="#3b82f6" opacity="0.8"/>
+  <circle cx="95" cy="50" r="3" fill="#8b5cf6" opacity="0.8"/>
+  <circle cx="65" cy="80" r="3" fill="#6366f1" opacity="0.8"/>
+  
+  <!-- Connection lines between bubbles -->
+  <line x1="58" y1="48" x2="82" y2="52" stroke="#ffffff" stroke-width="2" opacity="0.4" stroke-dasharray="2,2"/>
+  <line x1="75" y1="58" x2="62" y2="72" stroke="#ffffff" stroke-width="2" opacity="0.4" stroke-dasharray="2,2"/>
 </svg>
