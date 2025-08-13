@@ -70,7 +70,7 @@ export interface AISelectors {
 
 // AI 提供商 URLs
 export const AI_URLS: Record<AIProvider, string> = {
-  chatgpt: 'https://chat.openai.com',
+  chatgpt: 'https://chatgpt.com',
   claude: 'https://claude.ai',
   gemini: 'https://gemini.google.com'
 };

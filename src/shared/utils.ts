@@ -15,7 +15,7 @@ export const getAIProviderFromURL = (url: string): AIProvider | null => {
   const hostname = new URL(url).hostname;
   const pathname = new URL(url).pathname;
 
-  if (hostname.includes('openai.com') && pathname.startsWith('/c/')) {
+  if (hostname.includes('chatgpt.com')) {
     return 'chatgpt';
   } else if (hostname.includes('claude.ai')) {
     return 'claude';
