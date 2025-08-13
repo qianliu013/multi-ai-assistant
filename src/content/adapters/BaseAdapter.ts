@@ -4,7 +4,6 @@ import type {
   ContentResponse,
   ConversationMode,
 } from '@/shared/types';
-import { delay } from '@/shared/utils';
 
 export abstract class BaseAdapter implements AIAdapter {
   public readonly name: string;
@@ -45,19 +44,19 @@ export abstract class BaseAdapter implements AIAdapter {
     });
   }
 
-  protected async waitForElement(
+  protected async waitForElement<T extends Element = Element>(
     selector: string,
     timeout: number = 5000
-  ): Promise<Element> {
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
-      const element = document.querySelector(selector);
+      const element = document.querySelector(selector) as T;
       if (element) {
         resolve(element);
         return;
       }
 
       const observer = new MutationObserver((_mutations, obs) => {
-        const element = document.querySelector(selector);
+        const element = document.querySelector(selector) as T;
         if (element) {
           obs.disconnect();
           clearTimeout(timeoutId);
@@ -77,54 +76,45 @@ export abstract class BaseAdapter implements AIAdapter {
     });
   }
 
-  protected async simulateTyping(
-    element: HTMLElement,
-    text: string,
-    delayMs: number = 50
-  ): Promise<void> {
-    // 模拟真实的打字行为
-    element.focus();
-
-    if (
-      element instanceof HTMLTextAreaElement ||
-      element instanceof HTMLInputElement
-    ) {
-      // 对于input/textarea元素
-      element.value = '';
-      for (const char of text) {
-        element.value += char;
-
-        // 触发输入事件
-        element.dispatchEvent(new Event('input', { bubbles: true }));
-        element.dispatchEvent(new Event('keyup', { bubbles: true }));
-
-        // 随机延迟
-        await delay(delayMs + Math.random() * 50);
-      }
-
-      // 最后触发change事件
-      element.dispatchEvent(new Event('change', { bubbles: true }));
-    } else {
-      // 对于contenteditable元素
-      element.textContent = '';
-      for (const char of text) {
-        element.textContent += char;
-
-        // 触发输入事件
-        element.dispatchEvent(new Event('input', { bubbles: true }));
-
-        // 随机延迟
-        await delay(delayMs + Math.random() * 50);
-      }
-    }
+  protected async simulateClick(element: HTMLElement): Promise<void> {
+    element.click();
   }
 
-  protected async simulateClick(element: HTMLElement): Promise<void> {
-    // 模拟真实的点击行为
-    element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    await delay(50);
-    element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  protected async setInputValue(
+    selector: string,
+    message: string
+  ): Promise<void> {
+    // 1. 定位关键元素
+    const editor = await this.waitForElement<HTMLDivElement>(selector);
+
+    if (!editor) {
+      throw new Error('错误：无法找到输入框元素。');
+    }
+
+    // contenteditable 通常会将文本放在一个 <p> 标签里
+    let targetNode = editor.querySelector('p');
+    if (!targetNode) {
+      targetNode = document.createElement('p');
+      editor.appendChild(targetNode);
+    }
+
+    // 2. 聚焦输入框
+    editor.focus();
+
+    // 3. 修改 DOM 内容
+    // 直接设置 innerText 是最直接的方式
+    targetNode.innerText = message;
+
+    // 4. 派发 'input' 事件，这是通知框架内容变化的关键
+    // 我们需要设置 'bubbles: true' 和 'composed: true' 以便事件能被框架的监听器捕获
+    const inputEvent = new InputEvent('input', {
+      inputType: 'insertText',
+      data: message,
+      bubbles: true,
+      composed: true, // 允许事件穿透 Shadow DOM（如果存在）
+    });
+
+    editor.dispatchEvent(inputEvent);
   }
 
   // 子类需要实现的方法
@@ -132,21 +122,4 @@ export abstract class BaseAdapter implements AIAdapter {
     message: string,
     conversationMode: ConversationMode
   ): Promise<ContentResponse>;
-
-  // 子类可以重写的方法
-  protected async startNewConversation(): Promise<void> {
-    try {
-      if (this.selectors.newChatButton) {
-        const newChatButton = document.querySelector(
-          this.selectors.newChatButton
-        ) as HTMLElement;
-        if (newChatButton) {
-          await this.simulateClick(newChatButton);
-          await delay(1000); // 等待页面跳转
-        }
-      }
-    } catch (error) {
-      console.log(`${this.name}: 无法开始新对话，继续使用当前对话`);
-    }
-  }
 }

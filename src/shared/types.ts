@@ -57,27 +57,27 @@ export interface ContentResponse {
 export interface AIAdapter {
   name: string;
   initialize(): Promise<void>;
-  sendMessage(message: string, conversationMode: ConversationMode): Promise<ContentResponse>;
+  sendMessage(
+    message: string,
+    conversationMode: ConversationMode
+  ): Promise<ContentResponse>;
 }
 
 // AI 选择器配置
 export interface AISelectors {
-  inputBox: string;
   sendButton: string;
-  newChatButton?: string;
-  messageContainer?: string;
 }
 
 // AI 提供商 URLs
 export const AI_URLS: Record<AIProvider, string> = {
   chatgpt: 'https://chatgpt.com',
   claude: 'https://claude.ai',
-  gemini: 'https://gemini.google.com'
+  gemini: 'https://gemini.google.com',
 };
 
 // AI 提供商显示名称
 export const AI_DISPLAY_NAMES: Record<AIProvider, string> = {
   chatgpt: 'ChatGPT',
   claude: 'Claude',
-  gemini: 'Gemini'
+  gemini: 'Gemini',
 };

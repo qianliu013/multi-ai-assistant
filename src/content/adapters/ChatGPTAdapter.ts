@@ -5,12 +5,7 @@ import { delay } from '@/shared/utils';
 export class ChatGPTAdapter extends BaseAdapter {
   constructor() {
     super('ChatGPT', {
-      inputBox:
-        'textarea[placeholder*="Message"], #prompt-textarea, textarea[data-testid="textbox"]',
-      sendButton:
-        'button[data-testid="send-button"], button[aria-label="Send prompt"]',
-      newChatButton: 'a[href="/"], button:contains("New chat")',
-      messageContainer: '[data-testid="conversation-turn"]',
+      sendButton: 'button#composer-submit-button',
     });
   }
 
@@ -26,13 +21,7 @@ export class ChatGPTAdapter extends BaseAdapter {
         await this.startNewConversation();
       }
 
-      // 等待输入框出现
-      const inputBox = await this.waitForElement(this.selectors.inputBox);
-      console.log('ChatGPT: 找到输入框');
-
-      // 清空现有内容并输入消息
-      await this.clearAndInputMessage(inputBox as HTMLElement, message);
-
+      await this.setInputValue('.ProseMirror', message);
       console.log('ChatGPT: 消息输入完成');
 
       // 等待一小段时间让输入生效
@@ -55,51 +44,15 @@ export class ChatGPTAdapter extends BaseAdapter {
     }
   }
 
-  private async clearAndInputMessage(
-    element: HTMLElement,
-    message: string
-  ): Promise<void> {
-    if (element instanceof HTMLTextAreaElement) {
-      // 对于textarea元素
-      element.value = '';
-      element.focus();
-      await this.simulateTyping(element, message);
-    } else {
-      // 对于contenteditable元素
-      element.textContent = '';
-      element.innerHTML = '';
-      element.focus();
-
-      // 使用富文本编辑器的方式输入
-      element.textContent = message;
-      element.dispatchEvent(new Event('input', { bubbles: true }));
-      element.dispatchEvent(new Event('keyup', { bubbles: true }));
-    }
-  }
-
   protected async startNewConversation(): Promise<void> {
-    try {
-      // ChatGPT特定的新对话逻辑
-      const newChatSelectors = [
-        'a[href="/"]',
-        'button:contains("New chat")',
-        '[data-testid="new-chat-button"]',
-        'nav a[href="/"]',
-      ];
-
-      for (const selector of newChatSelectors) {
-        const newChatButton = document.querySelector(selector) as HTMLElement;
-        if (newChatButton) {
-          await this.simulateClick(newChatButton);
-          await delay(1000);
-          console.log('ChatGPT: 成功开始新对话');
-          return;
-        }
-      }
-
-      console.log('ChatGPT: 未找到新对话按钮，继续使用当前对话');
-    } catch (error) {
-      console.log('ChatGPT: 无法开始新对话，继续使用当前对话');
-    }
+    const event = new KeyboardEvent('keydown', {
+      key: 'O',
+      code: 'KeyO',
+      shiftKey: true,
+      metaKey: true, // Mac 上 Command 键是 metaKey
+      bubbles: true,
+    });
+    document.body.dispatchEvent(event);
+    await delay(200);
   }
 }

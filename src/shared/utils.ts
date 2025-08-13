@@ -13,16 +13,12 @@ export const delay = (ms: number): Promise<void> =>
  */
 export const getAIProviderFromURL = (url: string): AIProvider | null => {
   const hostname = new URL(url).hostname;
-  const pathname = new URL(url).pathname;
 
   if (hostname.includes('chatgpt.com')) {
     return 'chatgpt';
   } else if (hostname.includes('claude.ai')) {
     return 'claude';
-  } else if (
-    hostname.includes('google.com') &&
-    (pathname.includes('/app/') || pathname.includes('/chat'))
-  ) {
+  } else if (hostname.includes('gemini.google.com')) {
     return 'gemini';
   }
 
