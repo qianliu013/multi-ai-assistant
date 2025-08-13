@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Multi-AI Assistant",
+  "version": "1.0.0",
+  "description": "Send messages to multiple AI assistants (ChatGPT, Claude, Gemini) simultaneously",
+  
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage"
+  ],
+  
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*"
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Multi-AI Assistant"
+  },
+  
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://claude.ai/*", 
+        "https://gemini.google.com/*"
+      ],
+      "js": ["content/content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png", 
+    "128": "assets/icons/icon128.png"
+  }
+}
