@@ -31,7 +31,7 @@
     },
 
     /* Chrome Extension specific */
-    "types": ["chrome", "vite/client", "node"]
+    "types": ["chrome", "node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "chrome-extension"]
