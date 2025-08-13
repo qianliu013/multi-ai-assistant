@@ -5,14 +5,19 @@ import { delay } from '@/shared/utils';
 export class ChatGPTAdapter extends BaseAdapter {
   constructor() {
     super('ChatGPT', {
-      inputBox: 'textarea[placeholder*="Message"], #prompt-textarea, textarea[data-testid="textbox"]',
-      sendButton: 'button[data-testid="send-button"], button[aria-label="Send prompt"]',
+      inputBox:
+        'textarea[placeholder*="Message"], #prompt-textarea, textarea[data-testid="textbox"]',
+      sendButton:
+        'button[data-testid="send-button"], button[aria-label="Send prompt"]',
       newChatButton: 'a[href="/"], button:contains("New chat")',
       messageContainer: '[data-testid="conversation-turn"]',
     });
   }
 
-  async sendMessage(message: string, conversationMode: ConversationMode): Promise<ContentResponse> {
+  async sendMessage(
+    message: string,
+    conversationMode: ConversationMode
+  ): Promise<ContentResponse> {
     try {
       console.log(`ChatGPT: 准备发送消息`, { message, conversationMode });
 
@@ -50,7 +55,10 @@ export class ChatGPTAdapter extends BaseAdapter {
     }
   }
 
-  private async clearAndInputMessage(element: HTMLElement, message: string): Promise<void> {
+  private async clearAndInputMessage(
+    element: HTMLElement,
+    message: string
+  ): Promise<void> {
     if (element instanceof HTMLTextAreaElement) {
       // 对于textarea元素
       element.value = '';
@@ -76,7 +84,7 @@ export class ChatGPTAdapter extends BaseAdapter {
         'a[href="/"]',
         'button:contains("New chat")',
         '[data-testid="new-chat-button"]',
-        'nav a[href="/"]'
+        'nav a[href="/"]',
       ];
 
       for (const selector of newChatSelectors) {

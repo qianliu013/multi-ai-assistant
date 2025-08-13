@@ -5,13 +5,19 @@ import { delay } from '@/shared/utils';
 export class GeminiAdapter extends BaseAdapter {
   constructor() {
     super('Gemini', {
-      inputBox: 'rich-textarea textarea, textarea[aria-label*="Enter a prompt"]',
-      sendButton: 'button[aria-label="Send message"], button[aria-label="Send"]',
-      newChatButton: '[data-test-id="new-conversation-button"], button:contains("New chat")',
+      inputBox:
+        'rich-textarea textarea, textarea[aria-label*="Enter a prompt"]',
+      sendButton:
+        'button[aria-label="Send message"], button[aria-label="Send"]',
+      newChatButton:
+        '[data-test-id="new-conversation-button"], button:contains("New chat")',
     });
   }
 
-  async sendMessage(message: string, conversationMode: ConversationMode): Promise<ContentResponse> {
+  async sendMessage(
+    message: string,
+    conversationMode: ConversationMode
+  ): Promise<ContentResponse> {
     try {
       console.log(`Gemini: 准备发送消息`, { message, conversationMode });
 
@@ -44,7 +50,10 @@ export class GeminiAdapter extends BaseAdapter {
     }
   }
 
-  private async clearAndInputMessage(element: HTMLElement, message: string): Promise<void> {
+  private async clearAndInputMessage(
+    element: HTMLElement,
+    message: string
+  ): Promise<void> {
     if (element instanceof HTMLTextAreaElement) {
       // Gemini通常使用textarea
       element.value = '';
@@ -54,18 +63,20 @@ export class GeminiAdapter extends BaseAdapter {
       // 备用方案：直接设置值
       element.textContent = '';
       element.focus();
-      
+
       // 对于rich-textarea，可能需要特殊处理
       if (element.closest('rich-textarea')) {
         // 尝试找到内部的textarea
-        const textarea = element.closest('rich-textarea')?.querySelector('textarea') as HTMLTextAreaElement;
+        const textarea = element
+          .closest('rich-textarea')
+          ?.querySelector('textarea') as HTMLTextAreaElement;
         if (textarea) {
           textarea.value = '';
           await this.simulateTyping(textarea, message);
           return;
         }
       }
-      
+
       await this.simulateTyping(element, message);
     }
   }
@@ -77,7 +88,7 @@ export class GeminiAdapter extends BaseAdapter {
         '[data-test-id="new-conversation-button"]',
         'button:contains("New chat")',
         '[aria-label="New conversation"]',
-        'button[aria-label="Start new conversation"]'
+        'button[aria-label="Start new conversation"]',
       ];
 
       for (const selector of newChatSelectors) {

@@ -4,7 +4,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'chrome-extension', 'scripts'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'scripts'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',

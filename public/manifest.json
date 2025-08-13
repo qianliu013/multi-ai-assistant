@@ -3,43 +3,39 @@
   "name": "Multi-AI Assistant",
   "version": "2.0.0",
   "description": "Send messages to multiple AI assistants (ChatGPT, Claude, Gemini) simultaneously - Built with React & TypeScript",
-  
-  "permissions": [
-    "activeTab",
-    "tabs",
-    "storage"
-  ],
-  
+
+  "permissions": ["activeTab", "tabs", "storage"],
+
   "host_permissions": [
     "https://chat.openai.com/*",
     "https://claude.ai/*",
     "https://gemini.google.com/*"
   ],
-  
+
   "action": {
     "default_popup": "popup.html",
     "default_title": "Multi-AI Assistant"
   },
-  
+
   "background": {
     "service_worker": "background.js"
   },
-  
+
   "content_scripts": [
     {
       "matches": [
         "https://chat.openai.com/*",
-        "https://claude.ai/*", 
+        "https://claude.ai/*",
         "https://gemini.google.com/*"
       ],
       "js": ["content.js"],
       "run_at": "document_end"
     }
   ],
-  
+
   "icons": {
     "16": "icons/icon16.png",
-    "48": "icons/icon48.png", 
+    "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
 

@@ -33,13 +33,19 @@ try {
   // 4. 构建background脚本
   console.log('🔨 构建background脚本...');
   process.env.BUILD_TARGET = 'background';
-  execSync('vite build --config vite.config.background.ts', { stdio: 'inherit', cwd: projectRoot });
+  execSync('vite build --config vite.config.background.ts', {
+    stdio: 'inherit',
+    cwd: projectRoot,
+  });
   console.log('✅ background构建完成\n');
 
   // 5. 构建content脚本
   console.log('🔨 构建content脚本...');
   process.env.BUILD_TARGET = 'content';
-  execSync('vite build --config vite.config.background.ts', { stdio: 'inherit', cwd: projectRoot });
+  execSync('vite build --config vite.config.background.ts', {
+    stdio: 'inherit',
+    cwd: projectRoot,
+  });
   console.log('✅ content构建完成\n');
 
   // 6. 验证构建结果
@@ -76,7 +82,7 @@ try {
     files.forEach(file => {
       const fullPath = resolve(dir, file.name);
       const relativePath = prefix + file.name;
-      
+
       if (file.isDirectory()) {
         console.log(`   📁 ${relativePath}/`);
         listFiles(fullPath, relativePath + '/');
@@ -85,9 +91,9 @@ try {
       }
     });
   }
-  
+
   listFiles(distDir);
-  
+
   console.log('\n🎉 Chrome扩展构建成功！');
   console.log('📍 构建文件位置:', distDir);
   console.log('\n💡 使用方法:');
@@ -96,7 +102,6 @@ try {
   console.log('3. 开启"开发者模式"');
   console.log('4. 点击"加载已解压的扩展程序"');
   console.log('5. 选择 dist 文件夹');
-
 } catch (error) {
   console.error('❌ 构建失败:', error.message);
   process.exit(1);

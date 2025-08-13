@@ -29,7 +29,7 @@ function runBuild() {
     stdio: 'inherit',
   });
 
-  buildProcess.on('close', (code) => {
+  buildProcess.on('close', code => {
     if (code === 0) {
       console.log('✅ 构建完成，监听文件变化中...\n');
     } else {
@@ -47,17 +47,17 @@ const watcher = watch(['src/**/*', 'public/**/*'], {
   persistent: true,
 });
 
-watcher.on('change', (path) => {
+watcher.on('change', path => {
   console.log(`📝 文件变化: ${path}`);
   runBuild();
 });
 
-watcher.on('add', (path) => {
+watcher.on('add', path => {
   console.log(`➕ 新增文件: ${path}`);
   runBuild();
 });
 
-watcher.on('unlink', (path) => {
+watcher.on('unlink', path => {
   console.log(`🗑️  删除文件: ${path}`);
   runBuild();
 });

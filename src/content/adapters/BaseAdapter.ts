@@ -1,4 +1,9 @@
-import type { AIAdapter, AISelectors, ContentResponse, ConversationMode } from '@/shared/types';
+import type {
+  AIAdapter,
+  AISelectors,
+  ContentResponse,
+  ConversationMode,
+} from '@/shared/types';
 import { delay } from '@/shared/utils';
 
 export abstract class BaseAdapter implements AIAdapter {
@@ -80,7 +85,10 @@ export abstract class BaseAdapter implements AIAdapter {
     // 模拟真实的打字行为
     element.focus();
 
-    if (element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement) {
+    if (
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLInputElement
+    ) {
       // 对于input/textarea元素
       element.value = '';
       for (const char of text) {
@@ -129,7 +137,9 @@ export abstract class BaseAdapter implements AIAdapter {
   protected async startNewConversation(): Promise<void> {
     try {
       if (this.selectors.newChatButton) {
-        const newChatButton = document.querySelector(this.selectors.newChatButton) as HTMLElement;
+        const newChatButton = document.querySelector(
+          this.selectors.newChatButton
+        ) as HTMLElement;
         if (newChatButton) {
           await this.simulateClick(newChatButton);
           await delay(1000); // 等待页面跳转

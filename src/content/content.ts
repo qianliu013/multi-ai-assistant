@@ -1,4 +1,8 @@
-import type { AIAdapter, ContentMessage, ContentResponse } from '@/shared/types';
+import type {
+  AIAdapter,
+  ContentMessage,
+  ContentResponse,
+} from '@/shared/types';
 import { getAIProviderFromURL, handleError } from '@/shared/utils';
 import { ChatGPTAdapter } from './adapters/ChatGPTAdapter';
 import { ClaudeAdapter } from './adapters/ClaudeAdapter';
@@ -23,10 +27,12 @@ class ContentManager {
         this.initialized = true;
 
         // 监听来自background的消息
-        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-          this.handleMessage(message, sender, sendResponse);
-          return true; // 保持消息通道开放
-        });
+        chrome.runtime.onMessage.addListener(
+          (message, sender, sendResponse) => {
+            this.handleMessage(message, sender, sendResponse);
+            return true; // 保持消息通道开放
+          }
+        );
 
         console.log(`${this.adapter.name} 内容脚本初始化完成`);
       } else {
@@ -74,17 +80,17 @@ class ContentManager {
         }
 
         default:
-          sendResponse({ 
-            success: false, 
-            error: '未知的操作类型' 
+          sendResponse({
+            success: false,
+            error: '未知的操作类型',
           });
       }
     } catch (error) {
       const errorMessage = handleError(error, 'handling content message');
       console.error('处理消息时出错:', error);
-      sendResponse({ 
-        success: false, 
-        error: errorMessage 
+      sendResponse({
+        success: false,
+        error: errorMessage,
       });
     }
   }

@@ -5,13 +5,18 @@ import { delay } from '@/shared/utils';
 export class ClaudeAdapter extends BaseAdapter {
   constructor() {
     super('Claude', {
-      inputBox: 'div[contenteditable="true"], textarea[placeholder*="Talk to Claude"]',
+      inputBox:
+        'div[contenteditable="true"], textarea[placeholder*="Talk to Claude"]',
       sendButton: 'button[aria-label="Send Message"], button:contains("Send")',
-      newChatButton: 'button:contains("Start new conversation"), a[href="/chat"]',
+      newChatButton:
+        'button:contains("Start new conversation"), a[href="/chat"]',
     });
   }
 
-  async sendMessage(message: string, conversationMode: ConversationMode): Promise<ContentResponse> {
+  async sendMessage(
+    message: string,
+    conversationMode: ConversationMode
+  ): Promise<ContentResponse> {
     try {
       console.log(`Claude: 准备发送消息`, { message, conversationMode });
 
@@ -44,7 +49,10 @@ export class ClaudeAdapter extends BaseAdapter {
     }
   }
 
-  private async clearAndInputMessage(element: HTMLElement, message: string): Promise<void> {
+  private async clearAndInputMessage(
+    element: HTMLElement,
+    message: string
+  ): Promise<void> {
     if (element instanceof HTMLTextAreaElement) {
       // 对于textarea元素
       element.value = '';
@@ -58,11 +66,11 @@ export class ClaudeAdapter extends BaseAdapter {
       // Claude使用contenteditable，需要特殊处理
       // 直接设置innerHTML可能更可靠
       element.innerHTML = message.replace(/\n/g, '<br>');
-      
+
       // 触发必要的事件
       element.dispatchEvent(new Event('input', { bubbles: true }));
       element.dispatchEvent(new Event('keyup', { bubbles: true }));
-      
+
       // 设置光标到末尾
       const range = document.createRange();
       const selection = window.getSelection();
@@ -80,7 +88,7 @@ export class ClaudeAdapter extends BaseAdapter {
         'button:contains("Start new conversation")',
         'a[href="/chat"]',
         '[data-testid="new-chat-button"]',
-        'button[aria-label="New conversation"]'
+        'button[aria-label="New conversation"]',
       ];
 
       for (const selector of newChatSelectors) {

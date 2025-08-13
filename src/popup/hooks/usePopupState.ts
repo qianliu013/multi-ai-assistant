@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { 
-  AIProvider, 
-  ConversationMode, 
-  AITabStatus, 
+import type {
+  AIProvider,
+  ConversationMode,
+  AITabStatus,
   PopupSettings,
   SendMessageRequest,
   CheckTabsRequest,
-  SendResultMessage
+  SendResultMessage,
 } from '@/shared/types';
 import { storage, handleError } from '@/shared/utils';
 
@@ -19,8 +19,13 @@ interface StatusMessage {
 
 export const usePopupState = () => {
   const [message, setMessage] = useState('');
-  const [selectedAIs, setSelectedAIs] = useState<AIProvider[]>(['chatgpt', 'claude', 'gemini']);
-  const [conversationMode, setConversationMode] = useState<ConversationMode>('continue');
+  const [selectedAIs, setSelectedAIs] = useState<AIProvider[]>([
+    'chatgpt',
+    'claude',
+    'gemini',
+  ]);
+  const [conversationMode, setConversationMode] =
+    useState<ConversationMode>('continue');
   const [aiStatus, setAiStatus] = useState<AITabStatus>({
     chatgpt: false,
     claude: false,
@@ -37,7 +42,7 @@ export const usePopupState = () => {
           selectedAIs: ['chatgpt', 'claude', 'gemini'],
           conversationMode: 'continue',
         });
-        
+
         setSelectedAIs(settings.selectedAIs);
         setConversationMode(settings.conversationMode);
       } catch (error) {
@@ -71,7 +76,7 @@ export const usePopupState = () => {
       try {
         const request: CheckTabsRequest = { action: 'checkAITabs' };
         const response = await chrome.runtime.sendMessage(request);
-        
+
         if (response?.tabStatus) {
           setAiStatus(response.tabStatus);
         }
@@ -105,21 +110,24 @@ export const usePopupState = () => {
     return () => chrome.runtime.onMessage.removeListener(handleMessage);
   }, []);
 
-  const addStatusMessage = useCallback((text: string, type: StatusMessage['type']) => {
-    const newMessage: StatusMessage = {
-      id: Math.random().toString(36).substr(2, 9),
-      text,
-      type,
-      timestamp: Date.now(),
-    };
+  const addStatusMessage = useCallback(
+    (text: string, type: StatusMessage['type']) => {
+      const newMessage: StatusMessage = {
+        id: Math.random().toString(36).substr(2, 9),
+        text,
+        type,
+        timestamp: Date.now(),
+      };
 
-    setStatusMessages(prev => [...prev, newMessage]);
+      setStatusMessages(prev => [...prev, newMessage]);
 
-    // 5秒后自动移除消息
-    setTimeout(() => {
-      setStatusMessages(prev => prev.filter(msg => msg.id !== newMessage.id));
-    }, 5000);
-  }, []);
+      // 5秒后自动移除消息
+      setTimeout(() => {
+        setStatusMessages(prev => prev.filter(msg => msg.id !== newMessage.id));
+      }, 5000);
+    },
+    []
+  );
 
   const clearStatusMessages = useCallback(() => {
     setStatusMessages([]);
@@ -145,7 +153,10 @@ export const usePopupState = () => {
       const response = await chrome.runtime.sendMessage(request);
 
       if (response?.success) {
-        addStatusMessage(`正在向 ${selectedAIs.join(', ')} 发送消息...`, 'info');
+        addStatusMessage(
+          `正在向 ${selectedAIs.join(', ')} 发送消息...`,
+          'info'
+        );
         setMessage(''); // 清空输入框
       } else {
         addStatusMessage(response?.error || '发送失败', 'error');
@@ -156,7 +167,13 @@ export const usePopupState = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [message, selectedAIs, conversationMode, addStatusMessage, clearStatusMessages]);
+  }, [
+    message,
+    selectedAIs,
+    conversationMode,
+    addStatusMessage,
+    clearStatusMessages,
+  ]);
 
   return {
     message,

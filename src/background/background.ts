@@ -92,7 +92,11 @@ class BackgroundManager {
     conversationMode,
   }: SendMessageRequest): Promise<MessageResponse> {
     try {
-      console.log('开始发送消息到AIs:', { message, selectedAIs, conversationMode });
+      console.log('开始发送消息到AIs:', {
+        message,
+        selectedAIs,
+        conversationMode,
+      });
 
       // 并行处理所有选中的AI
       const sendPromises = selectedAIs.map(ai =>
@@ -183,7 +187,7 @@ class BackgroundManager {
       // 创建新tab
       const newTab = await chrome.tabs.create({
         url: aiUrl,
-        active: false, // 不要自动切换到新tab
+        active: true, // 不要自动切换到新tab
       });
 
       return newTab;

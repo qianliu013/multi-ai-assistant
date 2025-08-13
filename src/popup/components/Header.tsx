@@ -9,7 +9,9 @@ export const Header: React.FC = () => {
           <Bot className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-lg font-semibold text-white">Multi-AI Assistant</h1>
+          <h1 className="text-lg font-semibold text-white">
+            Multi-AI Assistant
+          </h1>
           <p className="text-xs text-primary-100">同时向多个AI发送消息</p>
         </div>
       </div>

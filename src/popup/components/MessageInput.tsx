@@ -28,7 +28,10 @@ export const MessageInput: React.FC<MessageInputProps> = ({
 
   return (
     <div className="space-y-2">
-      <label htmlFor="message-input" className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor="message-input"
+        className="block text-sm font-medium text-gray-700"
+      >
         输入消息
       </label>
       <div className="relative">

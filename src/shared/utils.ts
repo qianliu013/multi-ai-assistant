@@ -5,7 +5,7 @@ import type { AIProvider } from './types';
 /**
  * 延迟执行
  */
-export const delay = (ms: number): Promise<void> => 
+export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 /**
@@ -19,8 +19,10 @@ export const getAIProviderFromURL = (url: string): AIProvider | null => {
     return 'chatgpt';
   } else if (hostname.includes('claude.ai')) {
     return 'claude';
-  } else if (hostname.includes('google.com') && 
-             (pathname.includes('/app/') || pathname.includes('/chat'))) {
+  } else if (
+    hostname.includes('google.com') &&
+    (pathname.includes('/app/') || pathname.includes('/chat'))
+  ) {
     return 'gemini';
   }
 
@@ -37,9 +39,11 @@ export const isValidMessage = (message: string): boolean => {
 /**
  * 格式化字符计数显示
  */
-export const formatCharCount = (count: number): { 
-  text: string; 
-  color: string; 
+export const formatCharCount = (
+  count: number
+): {
+  text: string;
+  color: string;
 } => {
   if (count > 3000) {
     return { text: `${count}/4000`, color: 'text-red-500' };
@@ -54,7 +58,9 @@ export const formatCharCount = (count: number): {
  * 检查是否为开发环境
  */
 export const isDevelopment = (): boolean => {
-  return typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
+  return (
+    typeof process !== 'undefined' && process.env?.NODE_ENV === 'development'
+  );
 };
 
 /**
@@ -96,7 +102,7 @@ export const storage = {
     } catch (error) {
       console.error('Storage remove error:', error);
     }
-  }
+  },
 };
 
 /**
@@ -104,14 +110,14 @@ export const storage = {
  */
 export const handleError = (error: unknown, context: string): string => {
   console.error(`Error in ${context}:`, error);
-  
+
   if (error instanceof Error) {
     return error.message;
   }
-  
+
   if (typeof error === 'string') {
     return error;
   }
-  
+
   return `Unknown error in ${context}`;
 };

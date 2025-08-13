@@ -36,7 +36,7 @@ export const ConversationMode: React.FC<ConversationModeProps> = ({
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-medium text-gray-700">对话模式</h3>
-      
+
       <div className="space-y-2">
         {modes.map(modeOption => (
           <label
@@ -57,36 +57,44 @@ export const ConversationMode: React.FC<ConversationModeProps> = ({
               name="conversation-mode"
               value={modeOption.value}
               checked={mode === modeOption.value}
-              onChange={e => onModeChange(e.target.value as ConversationModeType)}
+              onChange={e =>
+                onModeChange(e.target.value as ConversationModeType)
+              }
               disabled={disabled}
               className="sr-only"
             />
-            
-            <div className={`
+
+            <div
+              className={`
               w-4 h-4 rounded-full border-2 flex items-center justify-center
               ${
                 mode === modeOption.value
                   ? 'border-primary-600 bg-primary-600'
                   : 'border-gray-300'
               }
-            `}>
+            `}
+            >
               {mode === modeOption.value && (
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               )}
             </div>
 
-            <div className={`
+            <div
+              className={`
               flex items-center gap-2 text-primary-600
               ${mode === modeOption.value ? 'text-primary-700' : 'text-gray-400'}
-            `}>
+            `}
+            >
               {modeOption.icon}
             </div>
 
             <div className="flex-1">
-              <div className={`
+              <div
+                className={`
                 font-medium text-sm
                 ${mode === modeOption.value ? 'text-gray-900' : 'text-gray-700'}
-              `}>
+              `}
+              >
                 {modeOption.label}
               </div>
               <div className="text-xs text-gray-500">
