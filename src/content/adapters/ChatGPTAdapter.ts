@@ -31,7 +31,7 @@ export class ChatGPTAdapter extends BaseAdapter {
       const sendButton = await this.waitForElement(this.selectors.sendButton);
       console.log('ChatGPT: 找到发送按钮');
 
-      await this.simulateClick(sendButton as HTMLElement);
+      this.simulateClick(sendButton as HTMLElement);
       console.log('ChatGPT: 消息发送完成');
 
       return { success: true };

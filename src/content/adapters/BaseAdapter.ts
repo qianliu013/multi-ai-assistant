@@ -8,7 +8,7 @@ import type {
 export abstract class BaseAdapter implements AIAdapter {
   public readonly name: string;
   protected selectors: AISelectors;
-  protected initialized: boolean = false;
+  protected initialized = false;
 
   constructor(name: string, selectors: AISelectors) {
     this.name = name;
@@ -21,7 +21,7 @@ export abstract class BaseAdapter implements AIAdapter {
     this.initialized = true;
   }
 
-  private async waitForPageLoad(timeout: number = 10000): Promise<void> {
+  private async waitForPageLoad(timeout = 10000): Promise<void> {
     return new Promise((resolve, reject) => {
       if (document.readyState === 'complete') {
         resolve();
@@ -46,21 +46,21 @@ export abstract class BaseAdapter implements AIAdapter {
 
   protected async waitForElement<T extends Element = Element>(
     selector: string,
-    timeout: number = 5000
+    timeout = 5000
   ): Promise<T> {
     return new Promise((resolve, reject) => {
-      const element = document.querySelector(selector) as T;
+      const element = document.querySelector(selector);
       if (element) {
-        resolve(element);
+        resolve(element as T);
         return;
       }
 
       const observer = new MutationObserver((_mutations, obs) => {
-        const element = document.querySelector(selector) as T;
+        const element = document.querySelector(selector);
         if (element) {
           obs.disconnect();
           clearTimeout(timeoutId);
-          resolve(element);
+          resolve(element as T);
         }
       });
 
@@ -76,7 +76,7 @@ export abstract class BaseAdapter implements AIAdapter {
     });
   }
 
-  protected async simulateClick(element: HTMLElement): Promise<void> {
+  protected simulateClick(element: HTMLElement): void {
     element.click();
   }
 

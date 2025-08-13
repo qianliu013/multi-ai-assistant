@@ -25,7 +25,7 @@ export class ClaudeAdapter extends BaseAdapter {
       const sendButton = await this.waitForElement(this.selectors.sendButton);
       console.log('Claude: 找到发送按钮');
 
-      await this.simulateClick(sendButton as HTMLElement);
+      this.simulateClick(sendButton as HTMLElement);
       console.log('Claude: 消息发送完成');
 
       return { success: true };
@@ -46,7 +46,7 @@ export class ClaudeAdapter extends BaseAdapter {
       'a[aria-label="New chat"]'
     );
     if (!newChatButton) {
-      await this.simulateClick(slideBar);
+      this.simulateClick(slideBar);
       await delay(500);
     }
     newChatButton = await this.waitForElement<HTMLButtonElement>(
@@ -55,7 +55,7 @@ export class ClaudeAdapter extends BaseAdapter {
     if (!newChatButton) {
       throw new Error('错误：无法找到发起新对话按钮。');
     }
-    await this.simulateClick(newChatButton);
+    this.simulateClick(newChatButton);
     await delay(1000);
   }
 }

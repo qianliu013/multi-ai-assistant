@@ -13,12 +13,12 @@ export const ConversationMode: React.FC<ConversationModeProps> = ({
   onModeChange,
   disabled = false,
 }) => {
-  const modes: Array<{
+  const modes: {
     value: ConversationModeType;
     label: string;
     description: string;
     icon: React.ReactNode;
-  }> = [
+  }[] = [
     {
       value: 'continue',
       label: '继续对话',

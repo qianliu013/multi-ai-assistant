@@ -10,7 +10,7 @@ import { GeminiAdapter } from './adapters/GeminiAdapter';
 
 class ContentManager {
   private adapter: AIAdapter | null = null;
-  private initialized: boolean = false;
+  private initialized = false;
 
   constructor() {
     this.init();

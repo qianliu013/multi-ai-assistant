@@ -71,7 +71,7 @@ class BackgroundManager {
       // 检查每个AI网站是否已经打开
       Object.entries(this.aiUrls).forEach(([ai, url]) => {
         tabStatus[ai as AIProvider] = tabs.some(
-          tab => tab.url && tab.url.startsWith(url)
+          tab => tab.url?.startsWith(url)
         );
       });
 
@@ -169,7 +169,7 @@ class BackgroundManager {
       // 查找现有的AI tab
       const tabs = await chrome.tabs.query({});
       const existingTab = tabs.find(
-        tab => tab.url && tab.url.startsWith(aiUrl)
+        tab => tab.url?.startsWith(aiUrl)
       );
 
       // 如果需要新对话且找到了现有tab，重新加载到首页
@@ -199,7 +199,7 @@ class BackgroundManager {
 
   private async waitForTabLoad(
     tabId: number,
-    timeout: number = 10000
+    timeout = 10000
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
@@ -219,7 +219,7 @@ class BackgroundManager {
           }
         } catch (error) {
           clearTimeout(timeoutId);
-          reject(error);
+          reject(error instanceof Error ? error : new Error(String(error)));
         }
       };
 
