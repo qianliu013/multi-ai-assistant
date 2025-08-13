@@ -40,6 +40,17 @@ export interface MessageResponse {
   tabStatus?: AITabStatus;
 }
 
+export interface TabStatusResponse {
+  success: boolean;
+  error?: string;
+  tabStatus?: AITabStatus;
+}
+
+export interface SendResponse {
+  success: boolean;
+  error?: string;
+}
+
 // Content Script 消息类型
 export interface ContentMessage {
   action: 'sendMessage';
@@ -50,7 +61,7 @@ export interface ContentMessage {
 export interface ContentResponse {
   success: boolean;
   error?: string;
-  result?: any;
+  result?: Record<string, unknown>;
 }
 
 // AI 适配器接口

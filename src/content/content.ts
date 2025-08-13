@@ -13,7 +13,7 @@ class ContentManager {
   private initialized = false;
 
   constructor() {
-    this.init();
+    void this.init();
   }
 
   private async init(): Promise<void> {
@@ -28,8 +28,8 @@ class ContentManager {
 
         // 监听来自background的消息
         chrome.runtime.onMessage.addListener(
-          (message, sender, sendResponse) => {
-            this.handleMessage(message, sender, sendResponse);
+          (message: ContentMessage, sender, sendResponse) => {
+            void this.handleMessage(message, sender, sendResponse);
             return true; // 保持消息通道开放
           }
         );

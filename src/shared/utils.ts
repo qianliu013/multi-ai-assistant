@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // 共享工具函数
 
 import type { AIProvider } from './types';
@@ -64,7 +65,7 @@ export const isDevelopment = (): boolean => {
  */
 export const safeJsonParse = <T>(json: string, fallback: T): T => {
   try {
-    return JSON.parse(json);
+    return JSON.parse(json) as T;
   } catch {
     return fallback;
   }
@@ -77,7 +78,7 @@ export const storage = {
   async get<T>(key: string, defaultValue: T): Promise<T> {
     try {
       const result = await chrome.storage.local.get([key]);
-      return result[key] ?? defaultValue;
+      return (result[key] as T) ?? defaultValue;
     } catch (error) {
       console.error('Storage get error:', error);
       return defaultValue;

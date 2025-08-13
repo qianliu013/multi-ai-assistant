@@ -7,6 +7,8 @@ import type {
   SendMessageRequest,
   CheckTabsRequest,
   SendResultMessage,
+  TabStatusResponse,
+  SendResponse,
 } from '@/shared/types';
 import { storage, handleError } from '@/shared/utils';
 
@@ -34,82 +36,7 @@ export const usePopupState = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [statusMessages, setStatusMessages] = useState<StatusMessage[]>([]);
 
-  // 加载保存的设置
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const settings = await storage.get<PopupSettings>('popupSettings', {
-          selectedAIs: ['chatgpt', 'claude', 'gemini'],
-          conversationMode: 'continue',
-        });
-
-        setSelectedAIs(settings.selectedAIs);
-        setConversationMode(settings.conversationMode);
-      } catch (error) {
-        console.error('Failed to load settings:', error);
-      }
-    };
-
-    loadSettings();
-  }, []);
-
-  // 保存设置
-  useEffect(() => {
-    const saveSettings = async () => {
-      try {
-        const settings: PopupSettings = {
-          selectedAIs,
-          conversationMode,
-        };
-        await storage.set('popupSettings', settings);
-      } catch (error) {
-        console.error('Failed to save settings:', error);
-      }
-    };
-
-    saveSettings();
-  }, [selectedAIs, conversationMode]);
-
-  // 检查AI标签页状态
-  useEffect(() => {
-    const checkAIStatus = async () => {
-      try {
-        const request: CheckTabsRequest = { action: 'checkAITabs' };
-        const response = await chrome.runtime.sendMessage(request);
-
-        if (response?.tabStatus) {
-          setAiStatus(response.tabStatus);
-        }
-      } catch (error) {
-        console.error('Failed to check AI status:', error);
-        // 设置默认状态
-        setAiStatus({
-          chatgpt: false,
-          claude: false,
-          gemini: false,
-        });
-      }
-    };
-
-    checkAIStatus();
-  }, []);
-
-  // 监听发送结果消息
-  useEffect(() => {
-    const handleMessage = (message: SendResultMessage) => {
-      if (message.action === 'sendResult') {
-        const { ai, success, error } = message;
-        addStatusMessage(
-          success ? `✓ ${ai} 发送成功` : `✗ ${ai} 发送失败: ${error}`,
-          success ? 'success' : 'error'
-        );
-      }
-    };
-
-    chrome.runtime.onMessage.addListener(handleMessage);
-    return () => chrome.runtime.onMessage.removeListener(handleMessage);
-  }, []);
-
+  // 状态消息管理函数
   const addStatusMessage = useCallback(
     (text: string, type: StatusMessage['type']) => {
       const newMessage: StatusMessage = {
@@ -133,6 +60,83 @@ export const usePopupState = () => {
     setStatusMessages([]);
   }, []);
 
+  // 加载保存的设置
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await storage.get<PopupSettings>('popupSettings', {
+          selectedAIs: ['chatgpt', 'claude', 'gemini'],
+          conversationMode: 'continue',
+        });
+
+        setSelectedAIs(settings.selectedAIs);
+        setConversationMode(settings.conversationMode);
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+      }
+    };
+
+    void loadSettings();
+  }, []);
+
+  // 保存设置
+  useEffect(() => {
+    const saveSettings = async () => {
+      try {
+        const settings: PopupSettings = {
+          selectedAIs,
+          conversationMode,
+        };
+        await storage.set('popupSettings', settings);
+      } catch (error) {
+        console.error('Failed to save settings:', error);
+      }
+    };
+
+    void saveSettings();
+  }, [selectedAIs, conversationMode]);
+
+  // 检查AI标签页状态
+  useEffect(() => {
+    const checkAIStatus = async () => {
+      try {
+        const request: CheckTabsRequest = { action: 'checkAITabs' };
+        const response: TabStatusResponse =
+          await chrome.runtime.sendMessage(request);
+
+        if (response?.tabStatus) {
+          setAiStatus(response.tabStatus);
+        }
+      } catch (error) {
+        console.error('Failed to check AI status:', error);
+        // 设置默认状态
+        setAiStatus({
+          chatgpt: false,
+          claude: false,
+          gemini: false,
+        });
+      }
+    };
+
+    void checkAIStatus();
+  }, []);
+
+  // 监听发送结果消息
+  useEffect(() => {
+    const handleMessage = (message: SendResultMessage) => {
+      if (message.action === 'sendResult') {
+        const { ai, success, error } = message;
+        addStatusMessage(
+          success ? `✓ ${ai} 发送成功` : `✗ ${ai} 发送失败: ${error}`,
+          success ? 'success' : 'error'
+        );
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(handleMessage);
+    return () => chrome.runtime.onMessage.removeListener(handleMessage);
+  }, [addStatusMessage]);
+
   const handleSend = useCallback(async () => {
     if (!message.trim() || selectedAIs.length === 0) {
       addStatusMessage('请输入消息并选择至少一个AI', 'error');
@@ -150,7 +154,7 @@ export const usePopupState = () => {
         conversationMode,
       };
 
-      const response = await chrome.runtime.sendMessage(request);
+      const response: SendResponse = await chrome.runtime.sendMessage(request);
 
       if (response?.success) {
         addStatusMessage(
@@ -159,7 +163,7 @@ export const usePopupState = () => {
         );
         setMessage(''); // 清空输入框
       } else {
-        addStatusMessage(response?.error || '发送失败', 'error');
+        addStatusMessage(response?.error ?? '发送失败', 'error');
       }
     } catch (error) {
       const errorMessage = handleError(error, 'sending message');

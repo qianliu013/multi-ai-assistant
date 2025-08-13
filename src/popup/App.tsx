@@ -48,7 +48,7 @@ const App: React.FC = () => {
             />
             
             <SendButton
-              onClick={handleSend}
+              onClick={() => void handleSend()}
               disabled={isLoading || !message.trim() || selectedAIs.length === 0}
               isLoading={isLoading}
             />

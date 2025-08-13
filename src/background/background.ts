@@ -19,10 +19,16 @@ class BackgroundManager {
 
   private init(): void {
     // 监听来自popup的消息
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      this.handleMessage(message, sender, sendResponse);
-      return true; // 保持消息通道开放以支持异步响应
-    });
+    chrome.runtime.onMessage.addListener(
+      (
+        message: SendMessageRequest | CheckTabsRequest,
+        sender,
+        sendResponse
+      ) => {
+        void this.handleMessage(message, sender, sendResponse);
+        return true; // 保持消息通道开放以支持异步响应
+      }
+    );
 
     // 监听扩展安装事件
     chrome.runtime.onInstalled.addListener(() => {
@@ -70,8 +76,8 @@ class BackgroundManager {
 
       // 检查每个AI网站是否已经打开
       Object.entries(this.aiUrls).forEach(([ai, url]) => {
-        tabStatus[ai as AIProvider] = tabs.some(
-          tab => tab.url?.startsWith(url)
+        tabStatus[ai as AIProvider] = tabs.some(tab =>
+          tab.url?.startsWith(url)
         );
       });
 
@@ -168,9 +174,7 @@ class BackgroundManager {
 
       // 查找现有的AI tab
       const tabs = await chrome.tabs.query({});
-      const existingTab = tabs.find(
-        tab => tab.url?.startsWith(aiUrl)
-      );
+      const existingTab = tabs.find(tab => tab.url?.startsWith(aiUrl));
 
       // 如果需要新对话且找到了现有tab，重新加载到首页
       if (existingTab && conversationMode === 'new') {
@@ -197,10 +201,7 @@ class BackgroundManager {
     }
   }
 
-  private async waitForTabLoad(
-    tabId: number,
-    timeout = 10000
-  ): Promise<void> {
+  private async waitForTabLoad(tabId: number, timeout = 10000): Promise<void> {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
         reject(new Error('Tab加载超时'));
@@ -215,7 +216,7 @@ class BackgroundManager {
             await delay(1000);
             resolve();
           } else {
-            setTimeout(checkTab, 500);
+            setTimeout(() => void checkTab(), 500);
           }
         } catch (error) {
           clearTimeout(timeoutId);
@@ -223,13 +224,13 @@ class BackgroundManager {
         }
       };
 
-      checkTab();
+      void checkTab();
     });
   }
 
   private notifyPopup(ai: AIProvider, success: boolean, error?: string): void {
     try {
-      chrome.runtime.sendMessage({
+      void chrome.runtime.sendMessage({
         action: 'sendResult',
         ai,
         success,
