@@ -29,24 +29,24 @@ export const SendButton: React.FC<SendButtonProps> = ({
       onClick={onClick}
       disabled={disabled || isLoading}
       className={`
-        w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg
-        font-medium text-white transition-all duration-200
+        w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl
+        font-semibold text-white transition-all duration-200 shadow-md
         ${
           disabled || isLoading
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-primary-600 hover:bg-primary-700 hover:shadow-lg active:scale-[0.98]'
+            ? 'bg-gray-400 cursor-not-allowed shadow-sm'
+            : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg active:scale-[0.98]'
         }
       `}
     >
       {isLoading ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin" />
-          发送中...
+          <span className="text-sm">发送中...</span>
         </>
       ) : (
         <>
           <Send className="w-4 h-4" />
-          发送消息
+          <span className="text-sm">发送消息</span>
         </>
       )}
     </button>

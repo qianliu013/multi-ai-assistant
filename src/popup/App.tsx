@@ -23,38 +23,42 @@ const App: React.FC = () => {
   } = usePopupState();
 
   return (
-    <div className="w-full min-h-[480px] bg-white flex flex-col">
+    <div className="w-full bg-white flex flex-col">
       <Header />
       
-      <main className="flex-1 p-4 space-y-4">
-        <MessageInput
-          value={message}
-          onChange={setMessage}
-          disabled={isLoading}
-        />
-        
-        <AISelector
-          selectedAIs={selectedAIs}
-          onSelectionChange={setSelectedAIs}
-          aiStatus={aiStatus}
-        />
-        
-        <ConversationMode
-          mode={conversationMode}
-          onModeChange={setConversationMode}
-          disabled={isLoading}
-        />
-        
-        <SendButton
-          onClick={handleSend}
-          disabled={isLoading || !message.trim() || selectedAIs.length === 0}
-          isLoading={isLoading}
-        />
-        
-        <StatusMessages
-          messages={statusMessages}
-          onClear={clearStatusMessages}
-        />
+      <main className="p-3">
+        <div className="space-y-3">
+          <AISelector
+            selectedAIs={selectedAIs}
+            onSelectionChange={setSelectedAIs}
+            aiStatus={aiStatus}
+          />
+          
+          <ConversationMode
+            mode={conversationMode}
+            onModeChange={setConversationMode}
+            disabled={isLoading}
+          />
+
+          <div className="space-y-2">
+            <MessageInput
+              value={message}
+              onChange={setMessage}
+              disabled={isLoading}
+            />
+            
+            <SendButton
+              onClick={handleSend}
+              disabled={isLoading || !message.trim() || selectedAIs.length === 0}
+              isLoading={isLoading}
+            />
+          </div>
+          
+          <StatusMessages
+            messages={statusMessages}
+            onClear={clearStatusMessages}
+          />
+        </div>
       </main>
     </div>
   );

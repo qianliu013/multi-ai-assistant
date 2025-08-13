@@ -21,7 +21,7 @@ export const ConversationMode: React.FC<ConversationModeProps> = ({
   }> = [
     {
       value: 'continue',
-      label: '继续现有对话',
+      label: '继续对话',
       description: '在当前对话中继续',
       icon: <MessageCircle className="w-4 h-4" />,
     },
@@ -34,74 +34,39 @@ export const ConversationMode: React.FC<ConversationModeProps> = ({
   ];
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-medium text-gray-700">对话模式</h3>
-
-      <div className="space-y-2">
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-semibold text-gray-800">对话模式</span>
+      </div>
+      
+      <div className="flex bg-gray-100 rounded-xl p-1 gap-1">
         {modes.map(modeOption => (
-          <label
+          <button
             key={modeOption.value}
+            onClick={() => onModeChange(modeOption.value)}
+            disabled={disabled}
             className={`
-              flex items-center gap-3 p-3 rounded-lg border cursor-pointer
-              transition-all duration-200
+              flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium
+              transition-all duration-200 border
               ${
                 mode === modeOption.value
-                  ? 'border-primary-300 bg-primary-50'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? 'bg-blue-500 text-white shadow-sm border-blue-500'
+                  : 'bg-transparent text-gray-600 hover:text-gray-800 border-transparent hover:bg-gray-50'
               }
-              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+              ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             `}
+            title={modeOption.description}
           >
-            <input
-              type="radio"
-              name="conversation-mode"
-              value={modeOption.value}
-              checked={mode === modeOption.value}
-              onChange={e =>
-                onModeChange(e.target.value as ConversationModeType)
-              }
-              disabled={disabled}
-              className="sr-only"
-            />
-
             <div
               className={`
-              w-4 h-4 rounded-full border-2 flex items-center justify-center
-              ${
-                mode === modeOption.value
-                  ? 'border-primary-600 bg-primary-600'
-                  : 'border-gray-300'
-              }
-            `}
-            >
-              {mode === modeOption.value && (
-                <div className="w-1.5 h-1.5 bg-white rounded-full" />
-              )}
-            </div>
-
-            <div
-              className={`
-              flex items-center gap-2 text-primary-600
-              ${mode === modeOption.value ? 'text-primary-700' : 'text-gray-400'}
-            `}
-            >
-              {modeOption.icon}
-            </div>
-
-            <div className="flex-1">
-              <div
-                className={`
-                font-medium text-sm
-                ${mode === modeOption.value ? 'text-gray-900' : 'text-gray-700'}
+                flex items-center
+                ${mode === modeOption.value ? 'text-white' : 'text-gray-400'}
               `}
-              >
-                {modeOption.label}
-              </div>
-              <div className="text-xs text-gray-500">
-                {modeOption.description}
-              </div>
+            >
+              {React.cloneElement(modeOption.icon as React.ReactElement, { className: "w-3.5 h-3.5" })}
             </div>
-          </label>
+            <span className="text-xs font-medium">{modeOption.label}</span>
+          </button>
         ))}
       </div>
     </div>

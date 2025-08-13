@@ -27,13 +27,19 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   );
 
   return (
-    <div className="space-y-2">
-      <label
-        htmlFor="message-input"
-        className="block text-sm font-medium text-gray-700"
-      >
-        输入消息
-      </label>
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <label
+          htmlFor="message-input"
+          className="text-sm font-semibold text-gray-800"
+        >
+          输入消息
+        </label>
+        <div className={`text-xs ${charCount.color}`}>
+          {charCount.text}
+        </div>
+      </div>
+      
       <div className="relative">
         <textarea
           id="message-input"
@@ -44,20 +50,18 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           placeholder="在此输入要发送给AI的消息... (Ctrl+Enter发送)"
           rows={4}
           className={`
-            w-full p-3 border border-gray-300 rounded-lg resize-none
-            focus:ring-2 focus:ring-primary-500 focus:border-transparent
-            transition-colors duration-200
-            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
+            w-full p-3 border border-gray-200 rounded-xl resize-none shadow-sm
+            focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+            transition-all duration-200
+            ${disabled ? 'bg-gray-50 cursor-not-allowed' : 'bg-white hover:border-gray-300'}
           `}
           maxLength={4000}
         />
-        <div className={`absolute bottom-2 right-3 text-xs ${charCount.color}`}>
-          {charCount.text}
-        </div>
       </div>
+      
       {value.length > 3000 && (
-        <p className="text-xs text-orange-600 flex items-center gap-1">
-          <span>⚠️</span>
+        <p className="text-xs text-orange-600 flex items-center gap-1 mt-1">
+          <span className="w-1 h-1 bg-orange-500 rounded-full"></span>
           消息较长，某些AI可能有字数限制
         </p>
       )}
